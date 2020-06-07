@@ -1,4 +1,26 @@
-const connection = require("connection");
+const connection = require("connection.js");
+
+const orm = {
+    selectAll: function (tableInput, callback) {
+      var queryString = `select * from ${tableInput}`;
+      connection.query(query, function (err, result) {
+        if (err) throw err;
+        callback(result);
+      });
+    },
+    // insertOne: 
+
+    updateOne: function(tableInput, state, callback) {
+      var queryString = `UPDATE ${tableInput} SET devoured = 1 WHERE ${state}`
+      connection.query(query, function (err, result){
+        if (err) throw err;
+        callback(result);
+      });
+    }
+  };
+
+
+module.exports = orm;
 
 // const orm = {
 // selectAll: function(tableInput, cb){
@@ -23,26 +45,6 @@ const connection = require("connection");
 //     })
 // };
 
-
-// * `selectAll()`
-// * `insertOne()`
-// * `updateOne()`
-
 // SELECT * FROM burgers
 // WHERE id = '$id'
 // AND date = '$date'
-
-const orm = {
-    selectAll: function (tableInput, callback) {
-      var queryString = `select * from ${tableInput}`;
-      connection.query(query, function (err, result) {
-        if (err) throw err;
-        callback(result);
-      });
-    },
-    // insertOne: 
-    // updateOne: 
-  };
-
-
-module.exports = orm;
