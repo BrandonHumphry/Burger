@@ -1,5 +1,5 @@
 // to import the orm
-const orm = require("../config/orm.js");
+const orm = require("../config/orm");
 
 // call the functions from the orm
 var burger = {
