@@ -1,50 +1,78 @@
-const connection = require("connection.js");
+const connection = require("../config/connection.js");
 
-const orm = {
-    selectAll: function (tableInput, callback) {
-      var queryString = `select * from ${tableInput}`;
-      connection.query(query, function (err, result) {
-        if (err) throw err;
-        callback(result);
-      });
-    },
-    // insertOne: 
+function createQmarks(num) {
+  var arr = [];
+  for (var i = 0; i < num; i++) {
+    arr.push("?");
+  }
+  return arr.toString();
+}
 
-    updateOne: function(tableInput, state, callback) {
-      var queryString = `UPDATE ${tableInput} SET devoured = 1 WHERE ${state}`
-      connection.query(query, function (err, result){
-        if (err) throw err;
-        callback(result);
-      });
+function translateSql(obj) {
+  var arr = [];
+  for (var key in obj) {
+    var value = obj[key];
+    if (Object.hasOwnProperty.call(obj, key)) {
+      if (typeof value === "string" && value.indexOf(" ") <= 0) {
+        value = "'" + value + "'";
+      }
+      arr.push(key + "=" + value);
     }
-  };
+  }
+}
 
+var orm = {
+  selectAll: function (table, callback) {
+    var queryString = "SELECT * FROM " + table + ";";
 
+    connection.query(queryString, function (err, res) {
+      if (err) {
+        throw err;
+      }
+      callback(res);
+    });
+  },
+  insertOne: function (table, cols, vals, callback) {
+    var queryString =
+      "INSERT INTO " +
+      table +
+      " (" +
+      cols.toString() +
+      ") " +
+      "VALUES (" +
+      createQmarks(vals.length) +
+      ")";
+
+    console.log(queryString);
+    connection.query(queryString, function (err, res) {
+      if (err) {
+        throw err;
+      }
+      callback(res);
+    });
+  },
+  updateOne: function (table, objColVals, state, callback) {
+    var queryString =
+      "UPDATE " + table + " SET" + translateSql(objColVals) + "WHERE " + state;
+
+    console.log(queryString);
+    connection.query(queryString, function (err, res) {
+      if (err) {
+        throw err;
+      }
+      callback(res);
+    });
+  }
+  // deleteOne: function (table, state, callback) {
+  //   var queryString = "DELETE FROM " + table + " WHERE" + state;
+
+  //   console.log(queryString);
+  //   connection.query(queryString, function (err, res) {
+  //     if (err) {
+  //       throw err;
+  //     }
+  //     callback(res);
+  //   });
+  // }
+};
 module.exports = orm;
-
-// const orm = {
-// selectAll: function(tableInput, cb){
-//     var queryString = "SELECT * FROM ??";
-//     connection.query(queryString, [tableInput],function(err, result) {
-//         if (err) throw err;
-//         cb(result);
-//     });
-
-// insertOne: function(tableInput, col, name, cb){
-//     var queryString = "INSERT INTO ?? ?? VALUES ?";
-//     connection.query(queryString, [tableInput, col, name],function(err, result) {
-//         if (err) throw err;
-//         cb(result);
-// },
-
-// updateOne: function(tableInput, col, name, id, cb){
-//     var queryString = "UPDATE ?? SET ?? = ? WHERE ID = ?"
-//     connection.query(queryString, [tableInput, col, name, id], function(err, result){
-//         if (err) throw err;
-//         cb(result);
-//     })
-// };
-
-// SELECT * FROM burgers
-// WHERE id = '$id'
-// AND date = '$date'
