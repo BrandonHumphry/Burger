@@ -14,15 +14,15 @@ var burger = {
       });
     },
     updateOne: function(objColVals, state, callback) {
-      orm.updateOne("burgers", objColVals, state, function(res) {
+      orm.updateOne("burgers",  state, function(res) {
         callback(res);
       });
     },
-    deleteOne: function(state, callback){
-      orm.deleteOne("burgers", state, function(res) {
-        callback(res);
-      });
-    }
+    // deleteOne: function(state, callback){
+    //   orm.deleteOne("burgers", state, function(res) {
+    //     callback(res);
+    //   });
+    // }
 
   };
   // export the model functions to the controller.

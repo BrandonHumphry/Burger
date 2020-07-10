@@ -51,10 +51,11 @@ var orm = {
       callback(res);
     });
   },
-  updateOne: function (table, objColVals, state, callback) {
+  updateOne: function (table, state, callback) {
+    console.log(state)
     var queryString =
-      "UPDATE " + table + " SET" + translateSql(objColVals) + "WHERE " + state;
-
+      "UPDATE " + table + " SET devoured = true WHERE " + state;
+    
     console.log(queryString);
     connection.query(queryString, function (err, res) {
       if (err) {

@@ -12,6 +12,12 @@ connection = mysql.createConnection({
   database: "burgers_db"
 });
 };
-connection.connect();
+connection.connect(function(err){
+  if(err) {
+  console.error(err.stack)
+  return;
+  }
+  console.log(connection.threadId)
+});
 module.exports = connection;
 
